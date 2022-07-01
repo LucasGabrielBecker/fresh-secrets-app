@@ -3,21 +3,29 @@ class Pg {
   connection: any;
   config: any;
   constructor() {
+    const t = {
+      user: Deno.env.get("DB_USER"),
+      database: Deno.env.get("DB_NAME"),
+      hostname: Deno.env.get("DB_HOSTNAME"),
+      password: Deno.env.get("DB_PASSWORD"),
+      port: Deno.env.get("DB_PORT"),
+      host: Deno.env.get("HOST"),
+    };
+    console.log(t);
     this.config = {
-      user: "kbjnfxzb",
-      database: "kbjnfxzb",
-      hostname: "motty.db.elephantsql.com",
-      password: "K6lwTosxoR2js65mb_8Hy5NuPxwLsbKm",
-      port: 5432,
+      user: Deno.env.get("DB_USER"),
+      database: Deno.env.get("DB_NAME"),
+      hostname: Deno.env.get("DB_HOSTNAME"),
+      password: Deno.env.get("DB_PASSWORD"),
+      port: Deno.env.get("DB_PORT"),
     };
 
     if (!this.connection) this.startClient();
   }
 
   startClient() {
-    this.connection = postgres(
-      "postgres://kbjnfxzb:K6lwTosxoR2js65mb_8Hy5NuPxwLsbKm@motty.db.elephantsql.com/kbjnfxzb"
-    );
+    const databaseStringConnection = Deno.env.get("DB_URL");
+    this.connection = postgres(databaseStringConnection as string);
     return this.connection;
   }
 

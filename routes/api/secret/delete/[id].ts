@@ -7,7 +7,7 @@ export const handler: Handlers = {
       await Pg.startClient();
       const { id } = ctx.params;
       await Pg.deleteById(id);
-      return Response.redirect("http://localhost:8000", 302);
+      return Response.redirect(Deno.env.get("HOST") as string, 302);
     } catch (error) {
       return new Response(JSON.stringify(error), {
         headers: { "Content-Type": "application/json" },

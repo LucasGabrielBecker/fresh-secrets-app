@@ -3,7 +3,6 @@ import { h } from "preact";
 import { tw } from "@twind";
 import { Handlers } from "$fresh/server.ts";
 import Pg from "../utils/database.ts";
-import * as anime from "https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js";
 
 interface Data {
   results: string[];
@@ -17,7 +16,7 @@ export const handler: Handlers<Data> = {
     Pg.startClient();
     await Pg.addOne({ description: secret });
 
-    return Response.redirect("http://localhost:8000", 302);
+    return Response.redirect(Deno.env.get("HOST") as string, 302);
   },
 };
 

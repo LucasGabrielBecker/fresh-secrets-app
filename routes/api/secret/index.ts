@@ -13,9 +13,4 @@ export const handler: Handlers = {
       headers: { "Content-Type": "application/json" },
     });
   },
-
-  async POST(request, ctx) {
-    console.log({ request, ctx });
-    return Response.redirect("http://localhost:8000");
-  },
 };
