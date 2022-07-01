@@ -21,10 +21,16 @@ class Pg {
   }
 
   async getAll() {
-    if(!this.connection) await this.startClient();
-    const secrets = await this.connection`select * from secrets`;
-    await this.close();
-    return secrets;
+    try {
+      if(!this.connection) await this.startClient();
+      const secrets = await this.connection`select * from secrets`;
+      await this.close();
+      return secrets;
+      
+    } catch (error) {
+      console.error(error)
+      console.log(error.stack)
+    }
   }
 
   async getByMatchingValue(value: string) {
