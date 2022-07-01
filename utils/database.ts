@@ -21,13 +21,14 @@ class Pg {
   }
 
   async getAll() {
-    console.log(this.connection)
+    if(!this.connection) await this.startClient();
     const secrets = await this.connection`select * from secrets`;
     await this.close();
     return secrets;
   }
 
   async getByMatchingValue(value: string) {
+    if(!this.connection) await this.startClient();
     const secrets = await this
       .connection`select * from secrets where description ilike '%${value}%'`;
 
@@ -36,6 +37,7 @@ class Pg {
   }
 
   async getById(id: string) {
+    if(!this.connection) await this.startClient();
     try {
       const secrets = await this
         .connection`select * from secrets where id = '${id}'`;
@@ -49,6 +51,7 @@ class Pg {
   }
 
   async deleteById(id: string) {
+    if(!this.connection) await this.startClient();
     try {
       await this.connection`delete from secrets where id = ${id}`;
       return true;
@@ -61,6 +64,7 @@ class Pg {
   }
 
   async addOne(data: { description: string }) {
+    if(!this.connection) await this.startClient();
     try {
       await this
         .connection`insert into secrets ("description") values (${data.description})`;
