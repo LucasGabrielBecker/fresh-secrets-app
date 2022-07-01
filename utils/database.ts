@@ -3,15 +3,6 @@ class Pg {
   connection: any;
   config: any;
   constructor() {
-    const t = {
-      user: Deno.env.get("DB_USER"),
-      database: Deno.env.get("DB_NAME"),
-      hostname: Deno.env.get("DB_HOSTNAME"),
-      password: Deno.env.get("DB_PASSWORD"),
-      port: Deno.env.get("DB_PORT"),
-      host: Deno.env.get("HOST"),
-    };
-    console.log(t);
     this.config = {
       user: Deno.env.get("DB_USER"),
       database: Deno.env.get("DB_NAME"),
@@ -30,6 +21,7 @@ class Pg {
   }
 
   async getAll() {
+    console.log(this.connection)
     const secrets = await this.connection`select * from secrets`;
     await this.close();
     return secrets;
