@@ -8,6 +8,7 @@ import Secret from "../components/Secret.tsx";
 
 export const handler = async (_req: Request, ctx: HandlerContext): Response => {
   const body = await fetch(`${_req.url}/api/secret`)
+  console.log({body})
   return ctx.render(body);
 };
 
