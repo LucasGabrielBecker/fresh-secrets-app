@@ -17,12 +17,7 @@ class Pg {
 
   startClient() {
     try {
-      
-      console.log("hit the startClient method")
-      const databaseStringConnection = Deno.env.get("DB_URL"); 
-      console.log("this is the DB_URL env var: ", Deno.env.get("DB_URL"))
-      this.connection = postgres(databaseStringConnection as string);
-      console.log("passed db connection")
+      if(!this.connection) this.connection = sql
       return this.connection;
     } catch (error) {
       console.log(error) 
