@@ -1,84 +1,75 @@
-import postgres from "https://deno.land/x/postgresjs/mod.js";
-import sql from "./connection.ts"
+// import postgres from "https://deno.land/x/postgresjs/mod.js";
+import pool from "./connection.ts";
 class Pg {
-  connection: any;
-  config: any;
-  constructor() {
-    this.config = {
-      user: Deno.env.get("DB_USER"),
-      database: Deno.env.get("DB_NAME"),
-      hostname: Deno.env.get("DB_HOSTNAME"),
-      password: Deno.env.get("DB_PASSWORD"),
-      port: Deno.env.get("DB_PORT"),
-    };
-
-    if (!this.connection) this.connection = sql
-  }
-
-  startClient() {
-    try {
-      if(!this.connection) this.connection = sql
-      return this.connection;
-    } catch (error) {
-      console.log(error) 
-    }
-  }
-
   async getAll() {
+    const connection = await pool.connect();
     try {
-      const secrets = await this.connection`select * from secrets`;
-      console.log(secrets)
-      await this.close();
+      const { rows: secrets } = await connection.queryObject(
+        `select * from secrets`
+      );
       return secrets;
-      
-    } catch (error) {
-      console.error(error)
-      console.log(error.stack)
-    }
-  }
-
-  async getByMatchingValue(value: string) {
-    const secrets = await this
-      .connection`select * from secrets where description ilike '%${value}%'`;
-
-    await this.close();
-    return secrets;
-  }
-
-  async getById(id: string) {
-    try {
-      const secrets = await this
-        .connection`select * from secrets where id = '${id}'`;
-      await this.close();
-      return secrets;
-    } catch (error) {
-      console.error(error);
-    } finally {
-      await this.close();
-    }
-  }
-
-  async deleteById(id: string) {
-    try {
-      await this.connection`delete from secrets where id = ${id}`;
-      return true;
-    } catch (error) {
-      console.error(error);
-      return false;
-    } finally {
-      await this.close();
-    }
-  }
-
-  async addOne(data: { description: string }) {
-    try {
-      await this
-        .connection`insert into secrets ("description") values (${data.description})`;
     } catch (error) {
       console.error(error);
       console.log(error.stack);
     } finally {
-      await this.close();
+      connection.release();
+    }
+  }
+
+  async getByMatchingValue(value: string) {
+    const connection = await pool.connect();
+    try {
+      const { rows: secrets } = await connection.queryObject(
+        `select * from secrets where description ilike '%${value}%'`
+      );
+
+      return secrets;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      connection.release();
+    }
+  }
+
+  async getById(id: string) {
+    const connection = await pool.connect();
+    try {
+      const { rows: secrets } = await connection.queryObject(
+        `select * from secrets where id = '${id}'`
+      );
+      return secrets;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      connection.release();
+    }
+  }
+
+  async deleteById(id: string) {
+    const connection = await pool.connect();
+    try {
+      const { rows: secrets } = await connection.queryObject(
+        `delete from secrets where id = '${id}'`
+      );
+      return secrets;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      connection.release();
+    }
+  }
+
+  async addOne(data: { description: string }) {
+    const connection = await pool.connect();
+    try {
+      await connection.queryObject(
+        `insert into secrets ("description") values ('${data.description}')`
+      );
+    } catch (error) {
+      console.error(error);
+      console.log(error.stack);
+    } finally {
+      connection.release();
     }
   }
 

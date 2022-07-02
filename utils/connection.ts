@@ -1,6 +1,6 @@
-import postgres from 'https://deno.land/x/postgresjs/mod.js'
+import * as postgres from "https://deno.land/x/postgres@v0.14.0/mod.ts";
 
-const databaseStringConnection = Deno.env.get("DB_URL"); 
-const connection = postgres(databaseStringConnection as string);
+const databaseUrl = Deno.env.get("DB_URL");
+const pool = new postgres.Pool(databaseUrl, 3, true);
 
-export default connection
+export default pool;
