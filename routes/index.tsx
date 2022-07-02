@@ -6,17 +6,9 @@ import { Secret as ISecret } from "../utils/index.ts";
 import Pg from "../utils/database.ts"
 import Secret from "../components/Secret.tsx";
 
-export const handler: Handlers<ISecret[] | null> = {
-  async GET(_, ctx) {
-    console.log("make until line 11")
-    Pg.startClient();
-    console.log("make until line 12")
-    const secrets = await Pg.getAll()
-    console.log("could make till get home page")
-    console.log("This is the secrets: ", secrets)
-
-    return ctx.render(secrets);
-  },
+export const handler = async (_req: Request, ctx: HandlerContext): Response => {
+  const body = await fetch(`${_req.url}/api/secret`)
+  return ctx.render(body);
 };
 
 export default function HomePage(props: { data: ISecret[] }) {
