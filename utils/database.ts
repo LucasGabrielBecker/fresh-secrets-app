@@ -32,6 +32,7 @@ class Pg {
   async getAll() {
     try {
       const secrets = await this.connection`select * from secrets`;
+      console.log(secrets)
       await this.close();
       return secrets;
       
