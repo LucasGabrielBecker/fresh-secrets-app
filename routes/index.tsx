@@ -4,12 +4,12 @@ import { Handlers } from "$fresh/server.ts";
 import { tw } from "@twind";
 import { Secret as ISecret } from "../utils/index.ts";
 import Pg from "../utils/database.ts"
+import sql from "../utils/connection.ts"
 import Secret from "../components/Secret.tsx";
 
 export const handler = async (_req: Request, ctx: HandlerContext): Response => {
-  const body = await fetch(`${_req.url}api/secret`)
-  console.log({body})
-  return ctx.render(body);
+  const secrets = await sql`select * from secrets`
+  return ctx.render(secrets);
 };
 
 export default function HomePage(props: { data: ISecret[] }) {
