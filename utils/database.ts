@@ -1,9 +1,9 @@
 import postgres from "https://deno.land/x/postgresjs/mod.js";
+import sql from "./connection.ts"
 class Pg {
   connection: any;
   config: any;
   constructor() {
-    console.log("hit the constructor")
     this.config = {
       user: Deno.env.get("DB_USER"),
       database: Deno.env.get("DB_NAME"),
@@ -12,7 +12,7 @@ class Pg {
       port: Deno.env.get("DB_PORT"),
     };
 
-    if (!this.connection) this.startClient();
+    if (!this.connection) this.connection = sql
   }
 
   startClient() {
@@ -31,7 +31,6 @@ class Pg {
 
   async getAll() {
     try {
-      if(!this.connection) await this.startClient();
       const secrets = await this.connection`select * from secrets`;
       await this.close();
       return secrets;
@@ -43,7 +42,6 @@ class Pg {
   }
 
   async getByMatchingValue(value: string) {
-    if(!this.connection) await this.startClient();
     const secrets = await this
       .connection`select * from secrets where description ilike '%${value}%'`;
 
@@ -52,7 +50,6 @@ class Pg {
   }
 
   async getById(id: string) {
-    if(!this.connection) await this.startClient();
     try {
       const secrets = await this
         .connection`select * from secrets where id = '${id}'`;
@@ -66,7 +63,6 @@ class Pg {
   }
 
   async deleteById(id: string) {
-    if(!this.connection) await this.startClient();
     try {
       await this.connection`delete from secrets where id = ${id}`;
       return true;
@@ -79,7 +75,6 @@ class Pg {
   }
 
   async addOne(data: { description: string }) {
-    if(!this.connection) await this.startClient();
     try {
       await this
         .connection`insert into secrets ("description") values (${data.description})`;
@@ -92,7 +87,7 @@ class Pg {
   }
 
   async close() {
-    await this.connection.end();
+    // await this.connection.end();
   }
 }
 
