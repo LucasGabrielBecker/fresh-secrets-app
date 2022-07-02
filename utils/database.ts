@@ -3,6 +3,7 @@ class Pg {
   connection: any;
   config: any;
   constructor() {
+    console.log("hit the constructor")
     this.config = {
       user: Deno.env.get("DB_USER"),
       database: Deno.env.get("DB_NAME"),
@@ -15,9 +16,17 @@ class Pg {
   }
 
   startClient() {
-    const databaseStringConnection = Deno.env.get("DB_URL");
-    this.connection = postgres(databaseStringConnection as string);
-    return this.connection;
+    try {
+      
+      console.log("hit the startClient method")
+      const databaseStringConnection = Deno.env.get("DB_URL");
+      console.log("this is the DB_URL env var: ", Deno.env.get("DB_URL"))
+      this.connection = postgres(databaseStringConnection as string);
+      console.log("passed db connection")
+      return this.connection;
+    } catch (error) {
+      console.log(error) 
+    }
   }
 
   async getAll() {

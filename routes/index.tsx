@@ -2,12 +2,15 @@
 import { h } from "preact";
 import { Handlers } from "$fresh/server.ts";
 import { tw } from "@twind";
-import { Pg, Secret as ISecret } from "../utils/index.ts";
+import { Secret as ISecret } from "../utils/index.ts";
+import Pg from "../utils/database.ts"
 import Secret from "../components/Secret.tsx";
 
 export const handler: Handlers<ISecret[] | null> = {
   async GET(_, ctx) {
+    console.log("make until line 11")
     Pg.startClient();
+    console.log("make until line 12")
     const secrets = await Pg.getAll()
     console.log("could make till get home page")
     console.log("This is the secrets: ", secrets)
