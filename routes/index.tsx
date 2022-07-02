@@ -8,8 +8,11 @@ import Secret from "../components/Secret.tsx";
 export const handler: Handlers<ISecret[] | null> = {
   async GET(_, ctx) {
     Pg.startClient();
+    const secrets = await Pg.getAll()
+    console.log("could make till get home page")
+    console.log("This is the secrets: ", secrets)
 
-    return ctx.render(await Pg.getAll());
+    return ctx.render(secrets);
   },
 };
 
