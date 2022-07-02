@@ -7,10 +7,11 @@ import Pg from "../utils/database.ts"
 import sql from "../utils/connection.ts"
 import Secret from "../components/Secret.tsx";
 
-// export const handler = async (_req: Request, ctx: HandlerContext): Response => {
-//   const secrets = await sql`select * from secrets`
-//   return ctx.render(secrets);
-// };
+export const handler = async (_req: Request, ctx: HandlerContext): Response => {
+  const secrets = await sql`select * from secrets`
+  console.log(secrets)
+  return ctx.render(secrets);
+};
 
 export default function HomePage(props: { data: ISecret[] }) {
   // const secrets = props.data;
