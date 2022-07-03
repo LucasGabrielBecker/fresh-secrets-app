@@ -3,11 +3,11 @@ import { h } from "preact";
 import { HandlerContext } from "$fresh/server.ts";
 import { tw } from "@twind";
 import { Secret as ISecret } from "../utils/index.ts";
-import Pg from "../utils/database.ts";
 import Secret from "../components/Secret.tsx";
-
+import { SecretsRepository } from "../repositories/Secrets.repository.impl.ts";
+const repository = new SecretsRepository();
 export const handler = async (_req: Request, ctx: HandlerContext) => {
-  const secrets = await Pg.getAll();
+  const secrets = await repository.getAll();
   return ctx.render(secrets);
 };
 

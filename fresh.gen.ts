@@ -4,25 +4,27 @@
 
 import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_500.tsx";
-import * as $2 from "./routes/api/joke.ts";
-import * as $3 from "./routes/api/secret/[id].ts";
-import * as $4 from "./routes/api/secret/delete/[id].ts";
-import * as $5 from "./routes/api/secret/index.ts";
-import * as $6 from "./routes/index.tsx";
-import * as $7 from "./routes/new.tsx";
-import * as $8 from "./routes/search.tsx";
+import * as $2 from "./routes/api/comment/upvote/[id].ts";
+import * as $3 from "./routes/api/joke.ts";
+import * as $4 from "./routes/api/secret/[id].ts";
+import * as $5 from "./routes/api/secret/delete/[id].ts";
+import * as $6 from "./routes/api/secret/index.ts";
+import * as $7 from "./routes/index.tsx";
+import * as $8 from "./routes/new.tsx";
+import * as $9 from "./routes/search.tsx";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $0,
     "./routes/_500.tsx": $1,
-    "./routes/api/joke.ts": $2,
-    "./routes/api/secret/[id].ts": $3,
-    "./routes/api/secret/delete/[id].ts": $4,
-    "./routes/api/secret/index.ts": $5,
-    "./routes/index.tsx": $6,
-    "./routes/new.tsx": $7,
-    "./routes/search.tsx": $8,
+    "./routes/api/comment/upvote/[id].ts": $2,
+    "./routes/api/joke.ts": $3,
+    "./routes/api/secret/[id].ts": $4,
+    "./routes/api/secret/delete/[id].ts": $5,
+    "./routes/api/secret/index.ts": $6,
+    "./routes/index.tsx": $7,
+    "./routes/new.tsx": $8,
+    "./routes/search.tsx": $9,
   },
   islands: {},
   baseUrl: import.meta.url,

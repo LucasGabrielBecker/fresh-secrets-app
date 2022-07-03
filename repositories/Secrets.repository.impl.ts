@@ -1,9 +1,17 @@
-// import postgres from "https://deno.land/x/postgresjs/mod.js";
-import pool from "./connection.ts";
-import { CustomDatabaseReturn, SecretParsed, Comment } from "./index.ts";
+import { Secret, CustomDatabaseReturn, SecretParsed } from "../utils/typing.ts";
+import { ISecretsRepository } from "./Secrets.repository.ts";
+import pool from "../utils/connection.ts";
 
-class Pg {
-  async getAll() {
+export class SecretsRepository implements ISecretsRepository {
+  selectAllString = `
+  select
+    s.id, s.description, s.created_at, c.id as c_id, c.content, c.secret_id as c_secret_id, c.created_at as c_created_at
+  from
+    secrets s
+  left join comments c
+  on s.id = c.secret_id;`;
+
+  async getAll(): Promise<Secret[] | []> {
     const connection = await pool.connect();
     try {
       const { rows } = await connection.queryObject<CustomDatabaseReturn>(
@@ -14,12 +22,12 @@ class Pg {
     } catch (error) {
       console.error(error);
       console.log(error.stack);
+      return [];
     } finally {
       connection.release();
     }
   }
-
-  async getByMatchingValue(value: string) {
+  async getByMatchingValue(value: string): Promise<Secret | null> {
     const connection = await pool.connect();
     try {
       const { rows: secrets } = await connection.queryObject(
@@ -29,12 +37,12 @@ class Pg {
       return secrets;
     } catch (error) {
       console.error(error);
+      return null;
     } finally {
       connection.release();
     }
   }
-
-  async getById(id: string) {
+  async getById(id: string): Promise<Secret | null> {
     const connection = await pool.connect();
     try {
       const { rows: secrets } = await connection.queryObject(
@@ -43,12 +51,12 @@ class Pg {
       return secrets;
     } catch (error) {
       console.error(error);
+      return null;
     } finally {
       connection.release();
     }
   }
-
-  async deleteById(id: string) {
+  async deleteById(id: string): Promise<void> {
     const connection = await pool.connect();
     try {
       const { rows: secrets } = await connection.queryObject(
@@ -66,7 +74,7 @@ class Pg {
     const connection = await pool.connect();
     try {
       await connection.queryObject(
-        `insert into secrets ("description") values ('${data.description}')`
+        `insert into secrets ("description") values ('${description}')`
       );
     } catch (error) {
       console.error(error);
@@ -75,11 +83,6 @@ class Pg {
       connection.release();
     }
   }
-
-  async close() {
-    // await this.connection.end();
-  }
-
   private parser(databaseResults: CustomDatabaseReturn[]): SecretParsed[] {
     const secrets = databaseResults.map((secret) => ({
       id: secret.id,
@@ -112,5 +115,3 @@ class Pg {
       }));
   }
 }
-
-export default new Pg();

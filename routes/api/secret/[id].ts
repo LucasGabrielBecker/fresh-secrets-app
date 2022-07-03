@@ -1,11 +1,12 @@
 import { Handlers } from "$fresh/server.ts";
-import Pg from "../../../utils/database.ts";
+import { SecretsRepository } from "../../../repositories/Secrets.repository.impl.ts";
 
+const repository = new SecretsRepository();
 export const handler: Handlers = {
   async GET(_, ctx) {
     try {
       const { id } = ctx.params;
-      const secret = await Pg.getById(id);
+      const secret = await repository.getById(id);
 
       return new Response(JSON.stringify(secret), {
         headers: { "Content-Type": "application/json" },

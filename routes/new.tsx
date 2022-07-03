@@ -13,7 +13,7 @@ export const handler: Handlers<Data> = {
   async POST(request: Request) {
     const formData = await request.formData();
     const secret = formData.get("secret") as string;
-    await Pg.addOne({ description: secret });
+    await Pg.addOne(secret);
     const appURL = Deno.env.get("HOST");
     return Response.redirect(appURL, 302);
   },
