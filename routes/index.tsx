@@ -7,8 +7,15 @@ import Secret from "../components/Secret.tsx";
 import { SecretsRepository } from "../repositories/Secrets.repository.impl.ts";
 const repository = new SecretsRepository();
 export const handler = async (_req: Request, ctx: HandlerContext) => {
-  const secrets = await repository.getAll();
-  return ctx.render(secrets);
+  const url = new URL(_req.url);
+  const params = new URLSearchParams(url.search);
+  const q = params.get("q");
+  console.log({ params });
+  const itens = q
+    ? await repository.getByMatchingValue(q)
+    : await repository.getAll();
+  // const secrets = await repository.getAll();
+  return ctx.render(itens);
 };
 
 export default function HomePage(props: { data: ISecret[] }) {

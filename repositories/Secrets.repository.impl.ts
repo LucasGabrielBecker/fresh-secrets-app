@@ -37,14 +37,20 @@ export class SecretsRepository implements ISecretsRepository {
   async getByMatchingValue(value: string): Promise<Secret | null> {
     const connection = await pool.connect();
     try {
-      const { rows: secrets } = await connection.queryObject(
-        `select * from secrets where description ilike '%${value}%'`
+      console.log(
+        this.selectAllString + `where s.description ilike '%${value}%'`
       );
-
+      const { rows } = await connection.queryObject<CustomDatabaseReturn>(
+        this.selectAllString.replace(";", " ") +
+          `where s.description ilike '%${value}%'`
+      );
+      console.log({ rows });
+      const secrets = this.parser(rows);
       return secrets;
     } catch (error) {
       console.error(error);
-      return null;
+      console.log(error.stack);
+      return [];
     } finally {
       connection.release();
     }

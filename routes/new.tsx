@@ -2,18 +2,19 @@
 import { h } from "preact";
 import { tw } from "@twind";
 import { Handlers } from "$fresh/server.ts";
-import Pg from "../utils/database.ts";
+import { SecretsRepository } from "../repositories/Secrets.repository.impl.ts";
 
 interface Data {
   results: string[];
   query: string;
 }
 
+const repository = new SecretsRepository();
 export const handler: Handlers<Data> = {
   async POST(request: Request) {
     const formData = await request.formData();
     const secret = formData.get("secret") as string;
-    await Pg.addOne(secret);
+    await repository.addOne(secret);
     const appURL = Deno.env.get("HOST");
     return Response.redirect(appURL, 302);
   },
