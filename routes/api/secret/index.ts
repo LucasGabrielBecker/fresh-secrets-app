@@ -7,7 +7,6 @@ export const handler: Handlers = {
     const url = new URL(request.url);
     const params = new URLSearchParams(url.search);
     const q = params.get("q");
-    console.log({ params });
     const itens = q
       ? await repository.getByMatchingValue(q)
       : await repository.getAll();
