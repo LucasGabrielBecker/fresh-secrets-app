@@ -7,7 +7,6 @@ export class CommentRepository implements ICommentRepository {
       const { rows: comment } = await connection.queryObject<{
         upvotes: number;
       }>(`select upvotes from comments where id = '${id}'`);
-      console.log({ comment });
       await connection.queryObject(
         `update comments set upvotes = ${
           comment[0].upvotes + 1
@@ -24,12 +23,11 @@ export class CommentRepository implements ICommentRepository {
     const connection = await pool.connect();
     try {
       const { rows: comment } = await connection.queryObject<{
-        upvotes: number;
-      }>(`select upvotes from comments where id = '${id}'`);
-      console.log({ comment });
+        downvotes: number;
+      }>(`select downvotes from comments where id = '${id}'`);
       await connection.queryObject(
-        `update comments set upvotes = ${
-          comment[0].upvotes - 1
+        `update comments set downvotes = ${
+          comment[0].downvotes + 1
         } where id = ${id}`
       );
     } catch (error) {

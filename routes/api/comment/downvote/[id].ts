@@ -5,7 +5,7 @@ export const handler: Handlers = {
   async POST(_, ctx) {
     try {
       const { id } = ctx.params;
-      await repository.upvote(id);
+      await repository.downvote(id);
       return Response.redirect(Deno.env.get("HOST") as string);
     } catch (error) {
       console.log(error);
