@@ -40,15 +40,16 @@ export default function Secret(props: { secret: ISecret }) {
                   group-hover:flex group-hover:translate-y-0 transition-all ease-in duration-300 border border-gray-200 px-6 py-2 rounded-md mb-2`}
                 >
                   <p>{comment.content}</p>
-                  <div class={tw`flex flex-row justify-between`}>
+                  <div class={tw`flex`}>
                     <form
                       action={`/api/comment/upvote/${comment.id}`}
                       method="POST"
                     >
-                      <button>
+                      <button class={tw`flex px-4 items-center justify-center`}>
+                        {comment.upvotes}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class={tw`h-4 w-4`}
+                          class={tw`h-4 w-4 ml-1`}
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -62,11 +63,15 @@ export default function Secret(props: { secret: ISecret }) {
                         </svg>
                       </button>
                     </form>
-                    <form action={`/api/comment/downvote/${comment.id}`}>
-                      <button>
+                    <form
+                      action={`/api/comment/downvote/${comment.id}`}
+                      method="POST"
+                    >
+                      <button class={tw`flex px-4 items-center justify-center`}>
+                        {comment.downvotes}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class={tw`h-4 w-4 ml-4`}
+                          class={tw`h-4 w-4 ml-1`}
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"

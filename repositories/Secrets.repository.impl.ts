@@ -1,11 +1,18 @@
-import { Secret, CustomDatabaseReturn, SecretParsed } from "../utils/typing.ts";
+import {
+  Secret,
+  CustomDatabaseReturn,
+  SecretParsed,
+  Comment,
+} from "../utils/typing.ts";
 import { ISecretsRepository } from "./Secrets.repository.ts";
 import pool from "../utils/connection.ts";
 
 export class SecretsRepository implements ISecretsRepository {
   selectAllString = `
   select
-    s.id, s.description, s.created_at, c.id as c_id, c.content, c.secret_id as c_secret_id, c.created_at as c_created_at
+    s.id, s.description, s.created_at,
+    c.id as c_id, c.content, c.secret_id as c_secret_id,
+    c.created_at as c_created_at, c.upvotes, c.downvotes
   from
     secrets s
   left join comments c
@@ -110,6 +117,8 @@ export class SecretsRepository implements ISecretsRepository {
       .filter((secret) => secret.c_secret_id === secretId)
       ?.map((comment) => ({
         id: comment.c_id,
+        upvotes: comment.upvotes,
+        downvotes: comment.downvotes,
         content: comment.content,
         created_at: comment.c_created_at,
       }));
