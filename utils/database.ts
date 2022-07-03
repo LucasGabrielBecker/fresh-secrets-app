@@ -1,12 +1,23 @@
 // import postgres from "https://deno.land/x/postgresjs/mod.js";
 import pool from "./connection.ts";
+import { CustomDatabaseReturn, SecretParsed, Comment } from "./index.ts";
+
 class Pg {
+  selectAllString = `
+  select
+    s.id, s.description, s.created_at, c.id as c_id, c.content, c.secret_id as c_secret_id, c.created_at as c_created_at
+  from
+    secrets s
+  left join comments c
+  on s.id = c.secret_id;`;
+
   async getAll() {
     const connection = await pool.connect();
     try {
-      const { rows: secrets } = await connection.queryObject(
-        `select * from secrets`
+      const { rows } = await connection.queryObject<CustomDatabaseReturn>(
+        this.selectAllString
       );
+      const secrets = this.parser(rows);
       return secrets;
     } catch (error) {
       console.error(error);
@@ -75,6 +86,38 @@ class Pg {
 
   async close() {
     // await this.connection.end();
+  }
+
+  parser(databaseResults: CustomDatabaseReturn[]): SecretParsed[] {
+    const secrets = databaseResults.map((secret) => ({
+      id: secret.id,
+      description: secret.description,
+      created_at: secret.created_at,
+      comments: this.getComments(secret.id, databaseResults),
+    }));
+
+    const unifier: Record<string, boolean> = {};
+    return secrets
+      .map((secret) => {
+        if (unifier[secret.id]) return null;
+
+        unifier[secret.id] = true;
+        return secret;
+      })
+      .filter(Boolean);
+  }
+
+  private getComments(
+    secretId: string,
+    databaseResults: CustomDatabaseReturn[]
+  ): Comment[] {
+    return databaseResults
+      .filter((secret) => secret.c_secret_id === secretId)
+      ?.map((comment) => ({
+        id: comment.c_id,
+        content: comment.content,
+        created_at: comment.c_created_at,
+      }));
   }
 }
 

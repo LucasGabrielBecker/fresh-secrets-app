@@ -15,7 +15,6 @@ export const handler: Handlers<Data> = {
     const secret = formData.get("secret") as string;
     await Pg.addOne({ description: secret });
     const appURL = Deno.env.get("HOST");
-    console.log(Deno.env.toObject());
     return Response.redirect(appURL, 302);
   },
 };
