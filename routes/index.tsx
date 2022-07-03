@@ -34,7 +34,7 @@ export default function HomePage(props: { data: ISecret[] }) {
             name="q"
             autoComplete="off"
             placeholder="Search"
-            class={tw`border-2 border-bermuda px-4 py-2 w-6/12 rounded-md outline-none`}
+            class={tw`border-2 border-verde-300 px-4 py-2 w-6/12 rounded-md outline-none`}
           />
           <svg
             xmlns="http://www.w3.org/2000/svg"

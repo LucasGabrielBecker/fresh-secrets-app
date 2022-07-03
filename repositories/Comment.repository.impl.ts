@@ -37,4 +37,17 @@ export class CommentRepository implements ICommentRepository {
       connection.release();
     }
   }
+  async addComment(secretId: string, comment: string): Promise<void> {
+    const connection = await pool.connect();
+    try {
+      await connection.queryObject(`
+        insert into comments ("secret_id", "content") values ('${secretId}','${comment}')
+       `);
+    } catch (error) {
+      console.error(error);
+      console.log(error.stack);
+    } finally {
+      connection.release();
+    }
+  }
 }

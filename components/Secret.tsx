@@ -39,6 +39,15 @@ export default function Secret(props: { secret: ISecret }) {
                 <Comment comment={comment} />
               ))
             : null}
+          <form action={`/api/comment/${props.secret.id}`} method="POST">
+            <input
+              type="text"
+              name="comment"
+              autoComplete="off"
+              placeholder="Leave a comment, a nice one."
+              class={tw`border-2 text-sm border-verde-300 px-4 py-2 w-6/12 rounded-md outline-none`}
+            />
+          </form>
         </div>
       </div>
     </div>
